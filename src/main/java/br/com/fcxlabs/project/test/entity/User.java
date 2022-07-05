@@ -48,12 +48,12 @@ public class User {
 	@Column(name="cpf", unique=true, nullable=false, length=14)
 	private String cpf;
 		
-	@ApiModelProperty(example = "17/04/1990")
-    @JsonFormat(pattern = "dd/MM/yyyy")
+	@ApiModelProperty(example = "1990-04-17")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     @JsonSerialize(using = DateSerializer.class)
     @JsonDeserialize(using = DateDeserializers.DateDeserializer.class)
 	@Temporal(TemporalType.DATE)
-	@Column(name="birth_date", nullable=false)
+	@Column(name="birth_date", columnDefinition="DATE", nullable=false)
 	private Date birthDate;
 	
 	@Column(name="mother_name", nullable=false, length=100)
@@ -62,20 +62,20 @@ public class User {
 	@Column(name="status", nullable=false, length=10)
 	private String status;
 	
-	@ApiModelProperty(example = "2022/02/15 22:00:00")
-    @JsonFormat(pattern = "yyyy/MM/dd HH:mm-300")
+	@ApiModelProperty(example = "2022-02-15 22:00-0300")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mmZ")
     @JsonSerialize(using = DateSerializer.class)
     @JsonDeserialize(using = DateDeserializers.DateDeserializer.class)
-	@Temporal(TemporalType.DATE)
-	@Column(name="insert_date", nullable=false)
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="insert_date", columnDefinition="DATETIME", nullable=false)
 	private Date insertDate;
 
-	@ApiModelProperty(example = "2022/05/22 22:00:00")
-    @JsonFormat(pattern = "yyyy/MM/dd HH:mm-300")
+	@ApiModelProperty(example = "2022-05-22 22:00-0300")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mmZ")
     @JsonSerialize(using = DateSerializer.class)
     @JsonDeserialize(using = DateDeserializers.DateDeserializer.class)
-	@Temporal(TemporalType.DATE)
-	@Column(name="change_date", nullable=false)
+	@Temporal(TemporalType.TIMESTAMP)
+	@Column(name="change_date", columnDefinition="DATETIME", nullable=false)
 	private Date changeDate;
 	
 	

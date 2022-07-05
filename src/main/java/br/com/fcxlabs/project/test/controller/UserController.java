@@ -3,6 +3,7 @@ package br.com.fcxlabs.project.test.controller;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-
 
 import br.com.fcxlabs.project.test.entity.User;
 import br.com.fcxlabs.project.test.service.UserService;
@@ -194,7 +193,7 @@ public class UserController {
 	})
 	@GetMapping(path = "/birth={user_birthDate}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<List<User>> findByBirthDate(@PathVariable(name = "user_birthDate") Date userBirthDate) {
+	public ResponseEntity<List<User>> findByBirthDate(@PathVariable(name = "user_birthDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date userBirthDate) {
 		List<User> users = userService.findByBirthDate(userBirthDate);
 		if (users == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -212,7 +211,7 @@ public class UserController {
 	})
 	@GetMapping(path = "/insert={user_insertDate}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<List<User>> findByInsertDate(@PathVariable(name = "user_insertDate") Date userInsertDate) {
+	public ResponseEntity<List<User>> findByInsertDate(@PathVariable(name = "user_insertDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mmZ") Date userInsertDate) {
 		List<User> users = userService.findByInsertDate(userInsertDate);
 		if (users == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -230,7 +229,7 @@ public class UserController {
 	})
 	@GetMapping(path = "/change={user_changeDate}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<List<User>> findByChangeDate(@PathVariable(name = "user_changeDate") Date userChangeDate) {
+	public ResponseEntity<List<User>> findByChangeDate(@PathVariable(name = "user_changeDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mmZ") Date userChangeDate) {
 		List<User> users = userService.findByChangeDate(userChangeDate);
 		if (users == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -246,9 +245,9 @@ public class UserController {
 		@ApiResponse(code = 400, message = "Bad Request"),
 		@ApiResponse(code = 404, message = "Not Found")
 	})
-	@GetMapping(path = "/birthb={user_birthDateBetween}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path = "/birthb={user_fromBirthDate}/{user_toBirthDate}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<List<User>> findByBirthDateBetween(@PathVariable(name = "user_fromBirthDate") Date userFromBirthDate, @PathVariable(name = "user_ToBirthDate") Date userToBirthDate) {
+	public ResponseEntity<List<User>> findByBirthDateBetween(@PathVariable(name = "user_fromBirthDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date userFromBirthDate, @PathVariable(name = "user_toBirthDate")  @DateTimeFormat(pattern = "yyyy-MM-dd") Date userToBirthDate) {
 		List<User> users = userService.findByBirthDateBetween(userFromBirthDate, userToBirthDate);
 		if (users == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -264,9 +263,9 @@ public class UserController {
 		@ApiResponse(code = 400, message = "Bad Request"),
 		@ApiResponse(code = 404, message = "Not Found")
 	})
-	@GetMapping(path = "/insertb={user_insertDateBetween}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path = "/insertb={user_fromInsertDate}/{user_toInsertDate}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<List<User>> findByInsertDateBetween(@PathVariable(name = "user_fromInsertDate") Date userFromInsertDate, @PathVariable(name = "user_ToInsertDate") Date userToInsertDate) {
+	public ResponseEntity<List<User>> findByInsertDateBetween(@PathVariable(name = "user_fromInsertDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date userFromInsertDate, @PathVariable(name = "user_toInsertDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date userToInsertDate) {
 		List<User> users = userService.findByInsertDateBetween(userFromInsertDate, userToInsertDate);
 		if (users == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -282,9 +281,9 @@ public class UserController {
 		@ApiResponse(code = 400, message = "Bad Request"),
 		@ApiResponse(code = 404, message = "Not Found")
 	})
-	@GetMapping(path = "/changeb={user_changeDateBetween}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path = "/changeb={user_fromChangeDate}/{user_toChangeDate}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<List<User>> findByChangeDateBetween(@PathVariable(name = "user_fromChangeDate") Date userFromChangeDate, @PathVariable(name = "user_ToChangeDate") Date userToChangeDate) {
+	public ResponseEntity<List<User>> findByChangeDateBetween(@PathVariable(name = "user_fromChangeDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date userFromChangeDate, @PathVariable(name = "user_toChangeDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date userToChangeDate) {
 		List<User> users = userService.findByChangeDateBetween(userFromChangeDate, userToChangeDate);
 		if (users == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);

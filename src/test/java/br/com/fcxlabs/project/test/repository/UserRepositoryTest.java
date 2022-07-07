@@ -2,8 +2,7 @@ package br.com.fcxlabs.project.test.repository;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
+
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,35 +21,35 @@ import br.com.fcxlabs.project.test.entity.User;
 
 public class UserRepositoryTest {
 
-	SimpleDateFormat sdfd = new SimpleDateFormat("yyyy/MM/dd");
-	SimpleDateFormat sdft = new SimpleDateFormat("yyyy/MM/dd HH:mm-0300");
+	SimpleDateFormat sdfd = new SimpleDateFormat("yyyy-MM-dd");
+	SimpleDateFormat sdft = new SimpleDateFormat("yyyy-MM-dd HH:mm-0300");
 
 	@Autowired
 	UserRepository userRepository;
 
 
-/*	
+	
 	@Test
 	public void create() throws ParseException{
 		User user = new User();
 		
 		user.setId(null);
-		user.setName("Maria");
-		user.setLogin("MARYA");
-		user.setPassword("M125TY");
-		user.setEmail("maria@fgtdn.com");
-		user.setPhone("(81)95623-6523");
-		user.setCpf("122.454.789-99");
-		user.setBirthDate(sdfd.parse("1980/07/12"));
-		user.setMotherName("ANA");
+		user.setName("Ana Barcelos");
+		user.setLogin("ANABAR");
+		user.setPassword("aNaBaR1982");
+		user.setEmail("ana.barcellos@gmail.com");
+		user.setPhone("(81)94567-0923");
+		user.setCpf("987.654.321-01");
+		user.setBirthDate(sdfd.parse("1982-10-23"));
+		user.setMotherName("Silvia Maria");
 		user.setStatus("ATIVO");
-		user.setInsertDate(sdft.parse("2022/06/30 18:00-0300"));
-		user.setChangeDate(sdft.parse("2022/07/01 10:31-0300"));
+		user.setInsertDate(sdft.parse("2022-07-06 23:01-0300"));
+		user.setChangeDate(sdft.parse("2022-07-07 09:05-0300"));
 
 		user = userRepository.save(user);
 	}
 
-
+/*
 	@Test
 	public void update() throws ParseException{
 		User user = new User();

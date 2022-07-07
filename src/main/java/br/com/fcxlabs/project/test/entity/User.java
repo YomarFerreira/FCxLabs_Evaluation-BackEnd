@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.swing.text.MaskFormatter;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -22,7 +23,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 
 @Entity
-@Table(name = "user")
+@Table(name = "\"user\"")
 public class User {
 
 	@Id
@@ -33,25 +34,26 @@ public class User {
 	@Column(name="name", nullable=false, length=100)
 	private String name;
 	
-	@Column(name="login", nullable=false, length=50)
+	@Column(name="login", unique=true, nullable=false, length=50)
 	private String login;
 	
 	@Column(name="password", nullable=false, length=50)
 	private String password;
 	
-	@Column(name="email", nullable=false, length=150)
+	@Column(name="email", unique=true, nullable=false, length=150)
 	private String email;
 	
 	@Column(name="phone", nullable=false, length=20)
 	private String phone;
 	
+	@ApiModelProperty(example = "12345678909")
 	@Column(name="cpf", unique=true, nullable=false, length=14)
 	private String cpf;
 		
 	@ApiModelProperty(example = "1990-04-17")
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @JsonSerialize(using = DateSerializer.class)
     @JsonDeserialize(using = DateDeserializers.DateDeserializer.class)
+    @JsonSerialize(using = DateSerializer.class)
 	@Temporal(TemporalType.DATE)
 	@Column(name="birth_date", columnDefinition="DATE", nullable=false)
 	private Date birthDate;
@@ -62,20 +64,22 @@ public class User {
 	@Column(name="status", nullable=false, length=10)
 	private String status;
 	
-	@ApiModelProperty(example = "2022-02-15 22:00-0300")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mmZ")
+//	@ApiModelProperty(example = "2022-02-15 13:10:00")
+//  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = JsonFormat.DEFAULT_TIMEZONE)
+	@ApiModelProperty(example = "2022-02-15 13:10-0300")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mmZ")
+	@JsonDeserialize(using = DateDeserializers.DateDeserializer.class)
     @JsonSerialize(using = DateSerializer.class)
-    @JsonDeserialize(using = DateDeserializers.DateDeserializer.class)
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="insert_date", columnDefinition="DATETIME", nullable=false)
 	private Date insertDate;
 
-	@ApiModelProperty(example = "2022-05-22 22:00-0300")
+	@ApiModelProperty(example = "2022-05-22 09:50-0300")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mmZ")
-    @JsonSerialize(using = DateSerializer.class)
     @JsonDeserialize(using = DateDeserializers.DateDeserializer.class)
+    @JsonSerialize(using = DateSerializer.class)
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name="change_date", columnDefinition="DATETIME", nullable=false)
+	@Column(name="change_date", columnDefinition="DATETIME")
 	private Date changeDate;
 	
 	

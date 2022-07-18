@@ -10,7 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.swing.text.MaskFormatter;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -34,20 +33,20 @@ public class User {
 	@Column(name="name", nullable=false, length=100)
 	private String name;
 	
-	@Column(name="login", unique=true, nullable=false, length=50)
+	@Column(name="login", nullable=false, length=50, unique=true)
 	private String login;
 	
 	@Column(name="password", nullable=false, length=50)
 	private String password;
 	
-	@Column(name="email", unique=true, nullable=false, length=150)
+	@Column(name="email", nullable=false, length=150, unique=true)
 	private String email;
 	
 	@Column(name="phone", nullable=false, length=20)
 	private String phone;
 	
 	@ApiModelProperty(example = "12345678909")
-	@Column(name="cpf", unique=true, nullable=false, length=14)
+	@Column(name="cpf", nullable=false, length=14, unique=true)
 	private String cpf;
 		
 	@ApiModelProperty(example = "1990-04-17")
@@ -64,8 +63,6 @@ public class User {
 	@Column(name="status", nullable=false, length=10)
 	private String status;
 	
-//	@ApiModelProperty(example = "2022-02-15 13:10:00")
-//  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = JsonFormat.DEFAULT_TIMEZONE)
 	@ApiModelProperty(example = "2022-02-15 13:10-0300")
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mmZ")
 	@JsonDeserialize(using = DateDeserializers.DateDeserializer.class)

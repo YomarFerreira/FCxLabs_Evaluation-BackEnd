@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.swing.text.MaskFormatter;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.fcxlabs.project.test.entity.User;
@@ -58,12 +60,12 @@ public class UserService {
 	public void deleteAll() {
 		usersRepository.deleteAllInBatch();
 	}
-	
-	public List<User> findAll(String name) {
+
+	public Page<User> findAll(String name, Pageable pageable) {
 		if (name == null) {
-			return usersRepository.findAll();
+			return usersRepository.findAll(pageable);
 		} else {
-			return usersRepository.findByNameContainingIgnoreCase(name);
+			return usersRepository.findByNameContainingIgnoreCase(name, pageable);
 		}
 	}
 
@@ -71,43 +73,48 @@ public class UserService {
 		return usersRepository.findById(id).orElse(null);
 	}
 
-	public User findByCpf(String cpf) {
-		return usersRepository.findByCpf(cpf);
+	public Page<User> findByCpf(String cpf, Pageable pageable) {
+		return usersRepository.findByCpf(cpf, pageable);
 	}
 	
-	public User findByLogin(String login) {
-		return usersRepository.findByLogin(login);
+	public Page<User> findByLogin(String login, Pageable pageable) {
+		return usersRepository.findByLogin(login, pageable);
 	}
 	
-	public List<User> findByStatus(String status) {
-		return usersRepository.findByStatus(status);
+	public Page<User> findByStatus(String status, Pageable pageable) {
+		return usersRepository.findByStatus(status, pageable);
 	}
 	
-	public List<User> findByBirthDate(Date birthDate) {
-		return usersRepository.findByBirthDate(birthDate);
+	public Page<User> findByBirthDate(Date birthDate, Pageable pageable) {
+		return usersRepository.findByBirthDate(birthDate, pageable);
 	}
 
-	public List<User> findByInsertDate(Date insertDate) {
-		return usersRepository.findByInsertDate(insertDate);
+	public Page<User> findByInsertDate(Date insertDate, Pageable pageable) {
+		return usersRepository.findByInsertDate(insertDate, pageable);
 	}
 	
-	public List<User> findByChangeDate(Date changeDate) {
-		return usersRepository.findByChangeDate(changeDate);
+	public Page<User> findByChangeDate(Date changeDate, Pageable pageable) {
+		return usersRepository.findByChangeDate(changeDate, pageable);
 	}
 	
-	public List<User> findByBirthDateBetween(Date fromBirthDate, Date toBirthDate) {
-		return usersRepository.findByBirthDateBetween(fromBirthDate, toBirthDate);
+	public Page<User> findByBirthDateBetween(Date fromBirthDate, Date toBirthDate, Pageable pageable) {
+		return usersRepository.findByBirthDateBetween(fromBirthDate, toBirthDate, pageable);
 	}
 
-	public List<User> findByInsertDateBetween(Date fromInsertDate, Date toInsertDate) {
-		return usersRepository.findByInsertDateBetween(fromInsertDate, toInsertDate);
+	public Page<User> findByInsertDateBetween(Date fromInsertDate, Date toInsertDate, Pageable pageable) {
+		return usersRepository.findByInsertDateBetween(fromInsertDate, toInsertDate, pageable);
 	}
 	
-	public List<User> findByChangeDateBetween(Date fromChangeDate, Date toChangeDate) {
-		return usersRepository.findByChangeDateBetween(fromChangeDate, toChangeDate);
+	public Page<User> findByChangeDateBetween(Date fromChangeDate, Date toChangeDate, Pageable pageable) {
+		return usersRepository.findByChangeDateBetween(fromChangeDate, toChangeDate, pageable);
 	}
 	
-
+	public Page<User> findByNameContainingIgnoreCaseAndStatus(String name, String status, Pageable pageable) {
+		return usersRepository.findByNameContainingIgnoreCaseAndStatus(name, status, pageable);
+	}
+	
+	
+	
 	public static boolean validarCpf(String validarCpf) throws Exception { //validar CPF
 		if(validarCpf.isEmpty() || validarCpf==null || validarCpf.length()<11){
 			return false;
@@ -157,5 +164,4 @@ public class UserService {
 		}
 	}
 
-	
 }

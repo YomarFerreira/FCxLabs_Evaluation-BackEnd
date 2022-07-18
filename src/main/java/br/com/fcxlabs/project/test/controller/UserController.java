@@ -1,8 +1,9 @@
 package br.com.fcxlabs.project.test.controller;
 
 import java.util.Date;
-import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -59,9 +61,9 @@ public class UserController {
 		@ApiResponse(code = 400, message = "Bad Request"),
 		@ApiResponse(code = 404, message = "Not Found")
 	})
-	@PutMapping(path = "/{user_id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<User> update(@PathVariable(name = "user_id") Long id,
+	public ResponseEntity<User> update(@PathVariable(name = "id") Long id,
 			@RequestBody User user) {
 		user.setId(id);
 		try {
@@ -81,9 +83,9 @@ public class UserController {
 	@ApiResponses({
 		@ApiResponse(code = 204, message = "No Content")
 	})
-	@DeleteMapping(path = "/{user_id}")
+	@DeleteMapping(path = "/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public ResponseEntity<Void> deleteById(@PathVariable(name = "user_id") Long id) {
+	public ResponseEntity<Void> deleteById(@PathVariable(name = "id") Long id) {
 		userService.deleteById(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
@@ -105,13 +107,32 @@ public class UserController {
 	@ApiResponses({
 		@ApiResponse(code = 200, message = "OK")
 	})
-	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<List<User>> findAll() {
-		List<User> users = userService.findAll(null);
+	public ResponseEntity<Page<User>> findAll(@RequestParam(name = "user", required = false) String usersfind, Pageable pageable)
+	{
+		Page<User> users = userService.findAll(usersfind, pageable);
 		return new ResponseEntity<>(users, HttpStatus.OK);
 	}
-
+	
+	
+	@ApiOperation(value = "Find an user by login")
+	@ApiResponses({
+		@ApiResponse(code = 200, message = "OK"),
+		@ApiResponse(code = 400, message = "Bad Request"),
+		@ApiResponse(code = 404, message = "Not Found")
+	})
+	@GetMapping(path = "/login={login}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseStatus(HttpStatus.OK)
+	public ResponseEntity<Page<User>> findByLogin(@PathVariable(name = "login") String login, Pageable pageable) {
+		Page<User> user = userService.findByLogin(login, pageable);
+		if (user == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		} else {
+			return new ResponseEntity<>(user, HttpStatus.OK);
+		}
+	}
+	
 	
 	@ApiOperation(value = "Find an user by id")
 	@ApiResponses({
@@ -119,9 +140,9 @@ public class UserController {
 		@ApiResponse(code = 400, message = "Bad Request"),
 		@ApiResponse(code = 404, message = "Not Found")
 	})
-	@GetMapping(path = "/{user_id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<User> findById(@PathVariable(name = "user_id") Long id) {
+	public ResponseEntity<User> findById(@PathVariable(name = "id") Long id) {
 		User user = userService.findById(id);
 		if (user == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -137,35 +158,16 @@ public class UserController {
 		@ApiResponse(code = 400, message = "Bad Request"),
 		@ApiResponse(code = 404, message = "Not Found")
 	})
-	@GetMapping(path = "/cpf={user_cpf}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path = "/cpf={cpf}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<User> findByCpf(@PathVariable(name = "user_cpf") String cpf) {
-		User user = userService.findByCpf(cpf);
+	public ResponseEntity<Page<User>> findByCpf(@PathVariable(name = "cpf") String cpf, Pageable pageable) {
+		Page<User> user = userService.findByCpf(cpf, pageable);
 		if (user == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} else {
 			return new ResponseEntity<>(user, HttpStatus.OK);
 		}
 	}
-
-
-	@ApiOperation(value = "Find an user by login")
-	@ApiResponses({
-		@ApiResponse(code = 200, message = "OK"),
-		@ApiResponse(code = 400, message = "Bad Request"),
-		@ApiResponse(code = 404, message = "Not Found")
-	})
-	@GetMapping(path = "/login={user_login}", produces = MediaType.APPLICATION_JSON_VALUE)
-	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<User> findByLogin(@PathVariable(name = "user_login") String login) {
-		User user = userService.findByLogin(login);
-		if (user == null) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		} else {
-			return new ResponseEntity<>(user, HttpStatus.OK);
-		}
-	}
-
 
 	@ApiOperation(value = "Find users by status")
 	@ApiResponses({
@@ -173,10 +175,10 @@ public class UserController {
 		@ApiResponse(code = 400, message = "Bad Request"),
 		@ApiResponse(code = 404, message = "Not Found")
 	})
-	@GetMapping(path = "/status={user_status}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path = "/status={status}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<List<User>> findByStatus(@PathVariable(name = "user_status") String userStatus) {
-		List<User> users = userService.findByStatus(userStatus);
+	public ResponseEntity<Page<User>> findByStatus(@PathVariable(name = "status") String userStatus, Pageable pageable) {
+		Page<User> users = userService.findByStatus(userStatus, pageable);
 		if (users == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} else {
@@ -191,10 +193,10 @@ public class UserController {
 		@ApiResponse(code = 400, message = "Bad Request"),
 		@ApiResponse(code = 404, message = "Not Found")
 	})
-	@GetMapping(path = "/birth={user_birthDate}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path = "/birth={birthDate}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<List<User>> findByBirthDate(@PathVariable(name = "user_birthDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date userBirthDate) {
-		List<User> users = userService.findByBirthDate(userBirthDate);
+	public ResponseEntity<Page<User>> findByBirthDate(@PathVariable(name = "birthDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date userBirthDate, Pageable pageable) {
+		Page<User> users = userService.findByBirthDate(userBirthDate , pageable);
 		if (users == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} else {
@@ -209,10 +211,10 @@ public class UserController {
 		@ApiResponse(code = 400, message = "Bad Request"),
 		@ApiResponse(code = 404, message = "Not Found")
 	})
-	@GetMapping(path = "/insert={user_insertDate}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path = "/insert={insertDate}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<List<User>> findByInsertDate(@PathVariable(name = "user_insertDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mmZ") Date userInsertDate) {
-		List<User> users = userService.findByInsertDate(userInsertDate);
+	public ResponseEntity<Page<User>> findByInsertDate(@PathVariable(name = "insertDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mmZ") Date userInsertDate, Pageable pageable) {
+		Page<User> users = userService.findByInsertDate(userInsertDate, pageable );
 		if (users == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} else {
@@ -227,10 +229,10 @@ public class UserController {
 		@ApiResponse(code = 400, message = "Bad Request"),
 		@ApiResponse(code = 404, message = "Not Found")
 	})
-	@GetMapping(path = "/change={user_changeDate}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path = "/change={changeDate}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<List<User>> findByChangeDate(@PathVariable(name = "user_changeDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mmZ") Date userChangeDate) {
-		List<User> users = userService.findByChangeDate(userChangeDate);
+	public ResponseEntity<Page<User>> findByChangeDate(@PathVariable(name = "changeDate") @DateTimeFormat(pattern = "yyyy-MM-dd HH:mmZ") Date userChangeDate, Pageable pageable) {
+		Page<User> users = userService.findByChangeDate(userChangeDate, pageable);
 		if (users == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} else {
@@ -245,10 +247,10 @@ public class UserController {
 		@ApiResponse(code = 400, message = "Bad Request"),
 		@ApiResponse(code = 404, message = "Not Found")
 	})
-	@GetMapping(path = "/birthb={user_fromBirthDate}/{user_toBirthDate}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path = "/birthb={fromBirthDate}/{toBirthDate}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<List<User>> findByBirthDateBetween(@PathVariable(name = "user_fromBirthDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date userFromBirthDate, @PathVariable(name = "user_toBirthDate")  @DateTimeFormat(pattern = "yyyy-MM-dd") Date userToBirthDate) {
-		List<User> users = userService.findByBirthDateBetween(userFromBirthDate, userToBirthDate);
+	public ResponseEntity<Page<User>> findByBirthDateBetween(@PathVariable(name = "fromBirthDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date userFromBirthDate, @PathVariable(name = "toBirthDate")  @DateTimeFormat(pattern = "yyyy-MM-dd") Date userToBirthDate, Pageable pageable) {
+		Page<User> users = userService.findByBirthDateBetween(userFromBirthDate, userToBirthDate, pageable);
 		if (users == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} else {
@@ -263,28 +265,27 @@ public class UserController {
 		@ApiResponse(code = 400, message = "Bad Request"),
 		@ApiResponse(code = 404, message = "Not Found")
 	})
-	@GetMapping(path = "/insertb={user_fromInsertDate}/{user_toInsertDate}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path = "/insertb={fromInsertDate}/{toInsertDate}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<List<User>> findByInsertDateBetween(@PathVariable(name = "user_fromInsertDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date userFromInsertDate, @PathVariable(name = "user_toInsertDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date userToInsertDate) {
-		List<User> users = userService.findByInsertDateBetween(userFromInsertDate, userToInsertDate);
+	public ResponseEntity<Page<User>> findByInsertDateBetween(@PathVariable(name = "fromInsertDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date userFromInsertDate, @PathVariable(name = "toInsertDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date userToInsertDate, Pageable pageable) {
+		Page<User> users = userService.findByInsertDateBetween(userFromInsertDate, userToInsertDate, pageable);
 		if (users == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} else {
 			return new ResponseEntity<>(users, HttpStatus.OK);
 		}
 	}
-	
-	
+		
 	@ApiOperation(value = "Find users by change date between")
 	@ApiResponses({
 		@ApiResponse(code = 200, message = "OK"),
 		@ApiResponse(code = 400, message = "Bad Request"),
 		@ApiResponse(code = 404, message = "Not Found")
 	})
-	@GetMapping(path = "/changeb={user_fromChangeDate}/{user_toChangeDate}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path = "/changeb={fromChangeDate}/{toChangeDate}", produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<List<User>> findByChangeDateBetween(@PathVariable(name = "user_fromChangeDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date userFromChangeDate, @PathVariable(name = "user_toChangeDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date userToChangeDate) {
-		List<User> users = userService.findByChangeDateBetween(userFromChangeDate, userToChangeDate);
+	public ResponseEntity<Page<User>> findByChangeDateBetween(@PathVariable(name = "fromChangeDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date userFromChangeDate, @PathVariable(name = "toChangeDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date userToChangeDate, Pageable pageable) {
+		Page<User> users = userService.findByChangeDateBetween(userFromChangeDate, userToChangeDate, pageable);
 		if (users == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} else {
@@ -292,4 +293,28 @@ public class UserController {
 		}
 	}
 
-}
+
+	@ApiOperation(value = "Find Name And Status")
+	@ApiResponses({
+	@ApiResponse(code = 200, message = "OK"),
+	@ApiResponse(code = 400, message = "Bad Request"),
+	@ApiResponse(code = 404, message = "Not Found")
+	})
+	@GetMapping(path = "/user={name}/status={status}", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseStatus(HttpStatus.OK)
+	public ResponseEntity<Page<User>> findByNameContainingIgnoreCaseAndStatus(@RequestParam(name = "user") String userName, @PathVariable(name = "status") String userStatus, Pageable pageable)
+	{
+		Page<User> users = userService.findByNameContainingIgnoreCaseAndStatus(userName, userStatus, pageable);
+		if (users == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		} else {
+			return new ResponseEntity<>(users, HttpStatus.OK);
+		}
+
+	}
+	
+	
+}	
+	
+	
+

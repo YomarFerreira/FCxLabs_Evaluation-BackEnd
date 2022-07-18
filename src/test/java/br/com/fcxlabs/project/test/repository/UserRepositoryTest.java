@@ -1,14 +1,17 @@
 package br.com.fcxlabs.project.test.repository;
 
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-
+import java.util.Date;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.TestPropertySource;
 
@@ -23,6 +26,7 @@ public class UserRepositoryTest {
 
 	SimpleDateFormat sdfd = new SimpleDateFormat("yyyy-MM-dd");
 	SimpleDateFormat sdft = new SimpleDateFormat("yyyy-MM-dd HH:mm-0300");
+	Pageable pageable;
 
 	@Autowired
 	UserRepository userRepository;
@@ -49,7 +53,6 @@ public class UserRepositoryTest {
 		user = userRepository.save(user);
 	}
 
-/*
 	@Test
 	public void update() throws ParseException{
 		User user = new User();
@@ -85,7 +88,7 @@ public class UserRepositoryTest {
 
 	@Test
     public void findAll() {
-        List<User> users = userRepository.findAll();
+		Page<User> users = userRepository.findAll(pageable);
         users.forEach(System.out::println);
     }
    
@@ -99,28 +102,28 @@ public class UserRepositoryTest {
 	@Test
 	public void findByNameContainingIgnoreCase() { 
 		String name = "An";
-		List<User> users = userRepository.findByNameContainingIgnoreCase(name);
+		Page<User> users = userRepository.findByNameContainingIgnoreCase(name, pageable);
 		users.forEach(System.out::println);
 	}
 
 	@Test
 	public void findByCpf() { 
 		String cpf = "123.456.789-99";
-		User user = userRepository.findByCpf(cpf);
+		Page<User> user = userRepository.findByCpf(cpf, pageable);
 		System.out.println(user);
 	}
 	
 	@Test
 	public void findByLogin() { 
 		String login = "ANA";
-		User user = userRepository.findByLogin(login);
+		Page<User> user = userRepository.findByLogin(login, pageable);
 		System.out.println(user);
 	}
 
 	@Test
 	public void findByStatus() { 
 		String status = "ATIVO";
-		List<User> users = userRepository.findByStatus(status);
+		Page<User> users = userRepository.findByStatus(status, pageable);
 		users.forEach(System.out::println);
 	}
 	
@@ -128,9 +131,9 @@ public class UserRepositoryTest {
 	
 	@Test
 	public void findByBirthDate() throws ParseException { 
-		String stringBirthDate = "1980/07/12";
+		String stringBirthDate = "1980-07-12";
 		Date birthDate = sdfd.parse(stringBirthDate);
-		List<User> users = userRepository.findByBirthDate(birthDate);
+		Page<User> users = userRepository.findByBirthDate(birthDate, pageable);
         users.forEach(System.out::println);
     }
 
@@ -140,7 +143,7 @@ public class UserRepositoryTest {
 	public void findByInsertDate() throws ParseException{ 
 		String StringInsertDate = "2022/06/29 17:30-0300";
 		Date insertDate = sdft.parse(StringInsertDate);
-		List<User> users = userRepository.findByInsertDate(insertDate);
+		Page<User> users = userRepository.findByInsertDate(insertDate, pageable);
 		users.forEach(System.out::println);
     }
 
@@ -148,7 +151,7 @@ public class UserRepositoryTest {
 	public void findByChangeDate() throws ParseException{ 
 		String StringChangeDate = "2022/06/30 08:00-0300";
 		Date changeDate = sdft.parse(StringChangeDate);
-		List<User> users = userRepository.findByChangeDate(changeDate);
+		Page<User> users = userRepository.findByChangeDate(changeDate, pageable);
 		users.forEach(System.out::println);
     }
 
@@ -158,7 +161,7 @@ public class UserRepositoryTest {
 		String toBirthDate = "2022/08/23";
 		Date fromBirthDated = sdfd.parse(fromBirthDate);
 		Date toBirthDated = sdfd.parse(toBirthDate);
-		List<User> users = userRepository.findByBirthDateBetween(fromBirthDated, toBirthDated);
+		Page<User> users = userRepository.findByBirthDateBetween(fromBirthDated, toBirthDated, pageable);
         users.forEach(System.out::println);
     }
 	
@@ -168,7 +171,7 @@ public class UserRepositoryTest {
 		String toInsertDate = "2022/08/25";
 		Date fromInsertDated = sdft.parse(fromInsertDate);
 		Date toInsertDated = sdft.parse(toInsertDate);
-		List<User> users = userRepository.findByInsertDateBetween(fromInsertDated, toInsertDated);
+		Page<User> users = userRepository.findByInsertDateBetween(fromInsertDated, toInsertDated, pageable);
         users.forEach(System.out::println);
     }
 	
@@ -178,9 +181,9 @@ public class UserRepositoryTest {
 		String toChangeDate = "2022/08/31";
 		Date fromChangeDated = sdft.parse(fromChangeDate);
 		Date toChangeDated = sdft.parse(toChangeDate);
-		List<User> users = userRepository.findByChangeDateBetween(fromChangeDated, toChangeDated);
+		Page<User> users = userRepository.findByChangeDateBetween(fromChangeDated, toChangeDated, pageable);
         users.forEach(System.out::println);
     }
     
-*/
+
 }

@@ -3,6 +3,8 @@ package br.com.fcxlabs.project.test.repository;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,27 +13,27 @@ import br.com.fcxlabs.project.test.entity.User;
 @Repository
 public interface UserRepository extends JpaRepository<User,Long>{
 	
-	List<User> findByNameContainingIgnoreCase(String name);
+	Page<User> findByNameContainingIgnoreCase(String name, Pageable pageable);
 	
-	User findByCpf(String cpf);
+	Page<User> findByCpf(String cpf, Pageable pageable);
 	
-	User findByLogin(String login);
-			
-	List<User> findByStatus(String status);
+	Page<User> findByLogin(String login, Pageable pageable);
+	
+	Page<User> findByStatus(String status, Pageable pageable);
 
-	List<User> findByBirthDate(Date birthDate);
+	Page<User> findByBirthDate(Date birthDate, Pageable pageable);
 	
-	List<User> findByInsertDate(Date insertDate);
+	Page<User> findByInsertDate(Date insertDate, Pageable pageable);
 	
-	List<User> findByChangeDate(Date changeDate);
+	Page<User> findByChangeDate(Date changeDate, Pageable pageable);
 
-	List<User> findByBirthDateBetween(Date fromBirthDate, Date toBirthDate);
+	Page<User> findByBirthDateBetween(Date fromBirthDate, Date toBirthDate, Pageable pageable);
 	
-	List<User> findByInsertDateBetween(Date fromInsertDate, Date toInsertDate);
+	Page<User> findByInsertDateBetween(Date fromInsertDate, Date toInsertDate, Pageable pageable);
 	
-	List<User> findByChangeDateBetween(Date fromChangeDate, Date toChangeDate);
+	Page<User> findByChangeDateBetween(Date fromChangeDate, Date toChangeDate, Pageable pageable);
 
-	
+	Page<User> findByNameContainingIgnoreCaseAndStatus(String Name, String Status, Pageable pageable);
 	
 	
 }

@@ -31,7 +31,7 @@ public class UserRepositoryTest {
 	@Autowired
 	UserRepository userRepository;
 
-
+/*
 	
 	@Test
 	public void create() throws ParseException{
@@ -85,13 +85,13 @@ public class UserRepositoryTest {
 //    public void deleteAll() {
 //    	userRepository.deleteAllInBatch();
 //    }
-
+*/
 	@Test
     public void findAll() {
 		Page<User> users = userRepository.findAll(pageable);
         users.forEach(System.out::println);
     }
-   
+/*   
 	@Test
 	public void findById() { 
 		Long id = 3L;
@@ -185,5 +185,5 @@ public class UserRepositoryTest {
         users.forEach(System.out::println);
     }
     
-
+*/
 }

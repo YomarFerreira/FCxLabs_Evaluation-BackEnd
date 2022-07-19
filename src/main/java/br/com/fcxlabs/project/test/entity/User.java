@@ -30,18 +30,23 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@ApiModelProperty(example = "User Name")
 	@Column(name="name", nullable=false, length=100)
 	private String name;
 	
+	@ApiModelProperty(example = "LOGIN")
 	@Column(name="login", nullable=false, length=50, unique=true)
 	private String login;
 	
+	@ApiModelProperty(example = "P@~$w-Or_D#09")
 	@Column(name="password", nullable=false, length=50)
 	private String password;
 	
+	@ApiModelProperty(example = "email@provider.com")
 	@Column(name="email", nullable=false, length=150, unique=true)
 	private String email;
 	
+	@ApiModelProperty(example = "(99)98765-4321")
 	@Column(name="phone", nullable=false, length=20)
 	private String phone;
 	
@@ -57,9 +62,11 @@ public class User {
 	@Column(name="birth_date", columnDefinition="DATE", nullable=false)
 	private Date birthDate;
 	
+	@ApiModelProperty(example = "User's mother name")
 	@Column(name="mother_name", nullable=false, length=100)
 	private String motherName;
 	
+	@ApiModelProperty(example = "ACTIVE or INACTIVE")
 	@Column(name="status", nullable=false, length=10)
 	private String status;
 	
@@ -98,7 +105,7 @@ public class User {
 	}
 
 	public User() {
-		// TODO Auto-generated constructor stub
+		super();
 	}
 
 	public Long getId() { return id; }

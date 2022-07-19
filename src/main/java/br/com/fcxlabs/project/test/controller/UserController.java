@@ -45,10 +45,14 @@ public class UserController {
 	})
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<User> create(@RequestBody User user) {
+	public ResponseEntity<User> create(@RequestBody User userRequest) {
 		try {
-			user = userService.create(user);
-			return new ResponseEntity<>(user, HttpStatus.CREATED);
+			User user = userService.create(userRequest);
+			if (user == null) {
+				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			} else {
+				return new ResponseEntity<>(user, HttpStatus.CREATED);
+			}
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
@@ -64,10 +68,10 @@ public class UserController {
 	@PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<User> update(@PathVariable(name = "id") Long id,
-			@RequestBody User user) {
-		user.setId(id);
+			@RequestBody User userRequest) {
+		userRequest.setId(id);
 		try {
-			user = userService.update(user);
+			User user = userService.update(userRequest);
 			if (user == null) {
 				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			} else {
